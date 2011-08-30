@@ -118,4 +118,24 @@ namespace MefContrib.Integration.Unity.Tests
 
         public IMefComponent MefComponent { get; set; }
     }
+
+    // to test resolution with metadata
+
+    public interface IPartWithTextMetadata
+    {
+        void HelloWorld(string message);
+    }
+
+    [Export(typeof(IPartWithTextMetadata))]
+    [ExportMetadata("World", "Earth")]
+    public class HelloWorldDispatcher : IPartWithTextMetadata
+    {
+        public void HelloWorld(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+    }
+
+ 
 }
