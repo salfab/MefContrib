@@ -3,6 +3,8 @@ using System.ComponentModel.Composition;
 
 namespace MefContrib.Integration.Unity.Tests
 {
+    using System.Collections.Generic;
+
     public interface IMefComponent
     {
         void Foo();
@@ -134,8 +136,35 @@ namespace MefContrib.Integration.Unity.Tests
         {
             Console.WriteLine(message);
         }
-
     }
 
- 
+    public interface IPartWithStronglyTypedMetadata
+    {
+    }
+
+    [Export(typeof(IPartWithStronglyTypedMetadata))]
+    [MyStronglyTypedMetadata(ListOfNames = new[] { "Element One", "Element Two" }, MetadataIdentifier = 5)]
+    public class StronglyTypedHelloWorldDispatcher : IPartWithStronglyTypedMetadata
+    {
+        public void HelloWorld(string message)
+        {
+            Console.WriteLine(message);
+        }
+    }
+
+    public interface IMyStronglyTypedMetadataAttribute
+    {
+        int MetadataIdentifier { get;  }
+
+        string[] ListOfNames { get; }
+    }
+
+    [MetadataAttribute]
+    [AttributeUsage(AttributeTargets.Class)]
+    public class MyStronglyTypedMetadataAttribute : Attribute, IMyStronglyTypedMetadataAttribute
+    {
+        public int MetadataIdentifier { get; set; }
+
+        public string[] ListOfNames { get; set; }
+    }
 }

@@ -38,6 +38,11 @@ namespace MefContrib.Containers
 
             var exports = exportProvider.GetExports(type, null, name);
 
+            if (type.GetGenericArguments().Count() > 1)
+            {
+                exports = exportProvider.GetExports(type.GetGenericArguments()[0], type.GetGenericArguments()[1], name);
+            }
+
             if (exports.Count() == 0)
                 return null;
 

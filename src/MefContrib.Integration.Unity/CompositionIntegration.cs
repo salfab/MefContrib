@@ -77,8 +77,8 @@ namespace MefContrib.Integration.Unity
             Context.Strategies.AddNew<ComposeStrategy>(UnityBuildStage.Initialization);
 
             // Policies
-            Context.Policies.Set<IBuildPlanPolicy>(
-                new LazyResolveBuildPlanPolicy(), typeof(Lazy<>));
+            Context.Policies.Set<IBuildPlanPolicy>(new LazyResolveBuildPlanPolicy(), typeof(Lazy<>));
+            Context.Policies.Set<IBuildPlanPolicy>(new LazyWithMetadataResolveBuildPlanPolicy(), typeof(Lazy<,>));
 
             Context.Policies.SetDefault<ICompositionContainerPolicy>(
                 new CompositionContainerPolicy(compositionContainer));

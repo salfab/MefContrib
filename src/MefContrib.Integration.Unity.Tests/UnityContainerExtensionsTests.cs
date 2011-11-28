@@ -407,6 +407,55 @@ namespace MefContrib.Integration.Unity.Tests
         }
 
 
+        [Test]
+        public void UnityCanResolveLazyTypeRegisteredInMefWithStronglyTypedMetadataTest()
+        {
+            //throw new NotImplementedException();
+            // Setup
+
+            var unityContainer = new UnityContainer();
+
+            var assemblyCatalog = new AssemblyCatalog(Assembly.GetExecutingAssembly());
+
+
+
+            // Add composition support for unity
+
+            unityContainer.AddExtension(new CompositionIntegration(false));
+
+            unityContainer.Configure<CompositionIntegration>().Catalogs.Add(assemblyCatalog);
+
+
+
+            // Lazy<IPartWithTextMetadata, IDictionary<string, object>> v = new Lazy<IPartWithTextMetadata, IDictionary<string, object>>();
+
+
+
+            //unityContainer.Configure<InjectedMembers>().ConfigureInjectionFor<Lazy<IPartWithTextMetadata, IDictionary<string, object>>>(
+
+            //    new InjectionConstructor()
+
+            //    );
+
+
+
+            Lazy<IPartWithStronglyTypedMetadata, IMyStronglyTypedMetadataAttribute> lazyMefComponent = unityContainer.Resolve<Lazy<IPartWithStronglyTypedMetadata, IMyStronglyTypedMetadataAttribute>>();
+
+
+
+            Assert.That(lazyMefComponent, Is.Not.Null);
+
+            Assert.That(lazyMefComponent.Value, Is.Not.Null);
+
+            Assert.That(lazyMefComponent.Metadata, Is.Not.Null);
+
+
+
+            Assert.That(lazyMefComponent.Value.GetType(), Is.EqualTo(typeof(HelloWorldDispatcher)));
+
+        }
+
+
 
         [Test]
 
