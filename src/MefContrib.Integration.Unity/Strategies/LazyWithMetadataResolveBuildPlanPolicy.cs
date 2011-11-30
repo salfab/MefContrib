@@ -29,7 +29,7 @@ namespace MefContrib.Integration.Unity.Strategies
                                
                 context.Existing = IsResolvingIEnumerable(typeToBuild) ? 
                 CreateResolveAllResolver(currentContainer, typeToBuild) :
-                CreateResolver(currentContainer, typeToBuild, lazy.Metadata, (Type)context.CurrentOperation, nameToBuild);
+                CreateResolver(currentContainer, typeToBuild, lazy.Metadata, nameToBuild);
 
                 DynamicMethodConstructorStrategy.SetPerBuildSingleton(context);
             }
@@ -46,8 +46,9 @@ namespace MefContrib.Integration.Unity.Strategies
                    type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
         }
 
-        private static object CreateResolver(IUnityContainer currentContainer, Type typeToBuild, object metadata,Type metadataType, string nameToBuild)
+        private static object CreateResolver(IUnityContainer currentContainer, Type typeToBuild, object metadata, string nameToBuild)
         {
+            Type metadataType = metadata.GetType();
 
             // Force to use an IDictionary<string, object> --> limitation : we we don't handle other types.
             if (metadata is IDictionary<string, object>)
