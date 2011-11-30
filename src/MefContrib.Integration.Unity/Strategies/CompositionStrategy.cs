@@ -30,6 +30,7 @@ namespace MefContrib.Integration.Unity.Strategies
             {
                 if (context.BuildKey.Type.IsGenericType && context.BuildKey.Type.GetGenericTypeDefinition() == typeof(Lazy<,>))
                 {
+                    context.CurrentOperation = buildKey.Type.GetGenericArguments()[1];
                     context.Existing = lazyExport;
                 }
                 else
