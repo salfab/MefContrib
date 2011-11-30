@@ -61,7 +61,7 @@ namespace MefContrib.Integration.Unity.Tests
             [Import]
             public IUnityComponent UnityComponent { get; set; }
         }
-        
+
         private static UnityContainer ConfigureUnityThenMef()
         {
             var container = new UnityContainer();
@@ -133,7 +133,7 @@ namespace MefContrib.Integration.Unity.Tests
             Assert.IsNotNull(component.UnityComponent);
             Assert.AreNotEqual(unityComponent, component.UnityComponent);
         }
-        
+
         [Test]
         public void ResolveUnityFromMefByCtor2Test()
         {
@@ -343,7 +343,6 @@ namespace MefContrib.Integration.Unity.Tests
         [Test]
 
         public void MefCanResolveLazyTypeRegisteredInMefWithTextMetadataTest()
-
         {
 
             ComposablePartCatalog catalog = new AssemblyCatalog(Assembly.GetExecutingAssembly());
@@ -357,9 +356,7 @@ namespace MefContrib.Integration.Unity.Tests
 
 
         [Test]
-
         public void UnityCanResolveLazyTypeRegisteredInMefWithTextMetadataTest()
-
         {
 
             // Setup
@@ -378,7 +375,7 @@ namespace MefContrib.Integration.Unity.Tests
 
 
 
-            //Lazy<IPartWithTextMetadata, IDictionary<string, object>> v = new Lazy<IPartWithTextMetadata, IDictionary<string, object>>();
+           // Lazy<IPartWithTextMetadata, IDictionary<string, object>> v = new Lazy<IPartWithTextMetadata, IDictionary<string, object>>();
 
 
 
@@ -424,20 +421,7 @@ namespace MefContrib.Integration.Unity.Tests
             unityContainer.AddExtension(new CompositionIntegration(false));
 
             unityContainer.Configure<CompositionIntegration>().Catalogs.Add(assemblyCatalog);
-
-
-
-            // Lazy<IPartWithTextMetadata, IDictionary<string, object>> v = new Lazy<IPartWithTextMetadata, IDictionary<string, object>>();
-
-
-
-            //unityContainer.Configure<InjectedMembers>().ConfigureInjectionFor<Lazy<IPartWithTextMetadata, IDictionary<string, object>>>(
-
-            //    new InjectionConstructor()
-
-            //    );
-
-
+      
 
             Lazy<IPartWithStronglyTypedMetadata, IMyStronglyTypedMetadataAttribute> lazyMefComponent = unityContainer.Resolve<Lazy<IPartWithStronglyTypedMetadata, IMyStronglyTypedMetadataAttribute>>();
 
@@ -449,10 +433,12 @@ namespace MefContrib.Integration.Unity.Tests
 
             Assert.That(lazyMefComponent.Metadata, Is.Not.Null);
 
+            Assert.That(lazyMefComponent.Metadata.ListOfNames[0], Is.EqualTo("Element One"));
+            Assert.That(lazyMefComponent.Metadata.ListOfNames[1], Is.EqualTo("Element Two"));
 
+            Assert.That(lazyMefComponent.Metadata.MetadataIdentifier, Is.EqualTo(5));
 
-            Assert.That(lazyMefComponent.Value.GetType(), Is.EqualTo(typeof(HelloWorldDispatcher)));
-
+            Assert.That(lazyMefComponent.Value.GetType(), Is.EqualTo(typeof(StronglyTypedHelloWorldDispatcher)));
         }
 
 
