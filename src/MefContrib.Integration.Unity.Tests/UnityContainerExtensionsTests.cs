@@ -10,6 +10,7 @@ namespace MefContrib.Integration.Unity.Tests
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition.Primitives;
+    using System.Linq;
 
     [TestFixture]
     public class UnityContainerExtensionsTests
@@ -439,6 +440,7 @@ namespace MefContrib.Integration.Unity.Tests
             Assert.That(lazyMefComponent.Metadata.MetadataIdentifier, Is.EqualTo(5));
 
             Assert.That(lazyMefComponent.Value.GetType(), Is.EqualTo(typeof(StronglyTypedHelloWorldDispatcher)));
+
         }
 
 
@@ -473,6 +475,42 @@ namespace MefContrib.Integration.Unity.Tests
             Assert.That(lazyMefComponent.Value, Is.Not.Null);
 
             Assert.That(lazyMefComponent, Is.Not.Null);
+        }
+
+        [Test]
+        public void UnityCanResolveEnumerableOfLazyTypeRegisteredInMefWithStronglyTypedMetadataTest()
+        {
+            //throw new NotImplementedException();
+            // Setup
+
+            var unityContainer = new UnityContainer();
+
+            var assemblyCatalog = new AssemblyCatalog(Assembly.GetExecutingAssembly());
+
+
+
+            // Add composition support for unity
+
+            unityContainer.AddExtension(new CompositionIntegration(false));
+
+            unityContainer.Configure<CompositionIntegration>().Catalogs.Add(assemblyCatalog);
+            
+
+
+            var lazyMefComponent = unityContainer.Resolve<IEnumerable<Lazy<IPartWithStronglyTypedMetadata, IMyStronglyTypedMetadataAttribute>>>().ToArray();
+
+
+
+            Assert.That(lazyMefComponent, Is.Not.Null);
+
+            Assert.That(lazyMefComponent[0].Value, Is.Not.Null);
+
+            Assert.That(lazyMefComponent[0].Metadata, Is.Not.Null);
+
+
+
+            Assert.That(lazyMefComponent[0].Value.GetType(), Is.EqualTo(typeof(StronglyTypedHelloWorldDispatcher)));
+
         }
     }
 }

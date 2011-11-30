@@ -24,12 +24,13 @@ namespace MefContrib.Integration.Unity.Strategies
             if (lazy.IsValueCreated == false)
             {
                 var currentContainer = context.NewBuildUp<IUnityContainer>();
+                var metadataType = GetMetadataType(context.BuildKey.Type);
                 var typeToBuild = GetTypeToBuild(context.BuildKey.Type);                
                 var nameToBuild = context.BuildKey.Name;
                                
                 context.Existing = IsResolvingIEnumerable(typeToBuild) ? 
                 CreateResolveAllResolver(currentContainer, typeToBuild) :
-                CreateResolver(currentContainer, typeToBuild, lazy.Metadata, nameToBuild);
+                CreateResolver(currentContainer, typeToBuild, metadataType, lazy.Metadata, nameToBuild);
 
                 DynamicMethodConstructorStrategy.SetPerBuildSingleton(context);
             }
@@ -40,16 +41,19 @@ namespace MefContrib.Integration.Unity.Strategies
             return type.GetGenericArguments()[0];
         }
 
+        private static Type GetMetadataType(Type type)
+        {
+            return type.GetGenericArguments()[1];
+        }
+
         private static bool IsResolvingIEnumerable(Type type)
         {
             return type.IsGenericType &&
                    type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
         }
 
-        private static object CreateResolver(IUnityContainer currentContainer, Type typeToBuild, object metadata, string nameToBuild)
-        {
-            Type metadataType = metadata.GetType();
-
+        private static object CreateResolver(IUnityContainer currentContainer, Type typeToBuild, Type metadataType, object metadata, string nameToBuild)
+        {            
             // Force to use an IDictionary<string, object> --> limitation : we we don't handle other types.
             if (metadata is IDictionary<string, object>)
             {
