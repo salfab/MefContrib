@@ -35,6 +35,22 @@ namespace MefContrib.Integration.Unity.Tests
         }
     }
 
+    [Export]
+    public class MefComponentDisposable : IDisposable
+    {
+        public bool Disposed { get; private set; }
+
+        public MefComponentDisposable()
+        {
+            
+        }
+        
+        public void Dispose()
+        {
+            this.Disposed = true;
+        }
+    }
+
     public interface IMefComponentWithUnityDependencies
     {
         IUnityOnlyComponent UnityOnlyComponent { get; set; }
